@@ -1,0 +1,394 @@
+---
+title: "Flint Profile"
+output: html_document
+date: "2023-04-30"
+author: "Enterprising Ventures of Color" 
+
+---
+```{r include = FALSE}
+knitr::opts_chunk$set(echo=FALSE, message = FALSE, warning = FALSE, cache = FALSE)
+```
+
+```{r}
+library(ggplot2)
+library(tidyverse)
+library(sf)
+library(tigris)
+library(mapview)
+library(leaflet)
+library(censusapi)
+library(tidycensus)
+library(flexdashboard)
+library(plotly)
+library(corrr)
+Sys.setenv(CENSUS_KEY="9ce53b8f34d0870429639cf46ef2aae01778b004")
+```
+
+
+While Flint was brought on the map for many by the water crisis, a Time article from 2016 highlights that the images of brown water running from taps and accounts of odors from pipes were a mere visualization of what numbers and history were already showing: both intentional and neglectful dispossession of wealth and resources for predominantly Black communities in Flint. A decreasingly white population in the city consistently warranted less investment and less care. 
+
+How has this marginzalization and divestment become apparent over time? What does it mean and look like for residents of the city today and the opportunities and challenges before them? These are explored in the following profile. 
+
+
+RISE OF VEHICLE CITY 
+Flint was founded by a fur trader named Jacob Smith as a village in 1819. After this, it became a lumbering town during the 19th century, before becoming a place for manufacturing vehicles – carriages and then automobiles - earning it the title of “Vehicle City.” 
+ In 1908 General Motors was founded in the city, after which it became a “manufacturing powerhouse” for the Buick and Chevrolet divisions. By 1978, 80,000 people were working at General Motors, equal to nearly half of the city’s population at the time, a peak period for both the industry in Flint and the city itself.  
+```{r}
+mi_cities = places("MI", cb = T, progress_bar = F)
+
+flint = mi_cities %>%
+  filter(NAME == "Flint")
+
+mi_counties = counties("MI", cb = T, progress_bar = F)
+
+genesee = mi_counties %>%
+    filter(NAME == "Genesee")
+
+leaflet() %>%
+  addTiles() %>%
+  addPolygons(
+    data = flint,
+    fill = T,
+    weight = 2,
+    label = ~NAME
+) %>%
+  addPolygons(
+    data = genesee,
+    fill = F, 
+    weight = 3,
+    label = ~NAME
+     )
+```
+```{r}
+Year= c(1940, 1950, 1960, 1970, 1980, 1990, 2000, 2010, 2020)
+Population = c(151543,163143, 196940, 193317, 159611, 140761, 124943, 102434, 81252)
+flint_pop = as.data.frame(cbind(Year, Population))
+```
+```{r}
+ggplot(data = flint_pop, aes(x = Year, y = Population)) + geom_point() + geom_line(color = "blue") + theme(panel.background = element_blank()) + labs(title = "City of Flint Population 1940 - 2020")
+
+pop_table = spread(flint_pop, key = Year, value = Population)
+```
+
+
+This growth didn’t come without tension, however, with workers unwilling to drive success without reaping basic benefits of it. As the industry accelerated, concerns grew around labor rights and conditions. From the unprecedented automotive sit-down strike in 1936, to the first union agreement with General Motors, the industry’s workers united to create a space that was both prosperous and dignified. Consequent improvements in wages and working conditions created an attractive environment in Flint to live and work, and with this came an increase in wealth that supported a strong educational system that was paired with a strong cultural environment due to the investments of auto leaders like Charles Stewart Mott and William C. Durant.  Flint at the aggregate level was thriving.
+
+
+APARTHEID IN DISAGGREGATION 
+	One would be remiss, however, to discuss this period, without a disaggregation of the data, which reveals an  exclusion of Black residents from the economic and social opportunities that came with the rise of the industry. Peter J Hammer, Professor of Law and director at Wayne State University Law School, testified in the MI Civil Right Commission hearing on the Flint water crisis. His presentation, titled “The Flint Water Crisis: History, Housing and Spatial-Structural Racism” was essentially an exploration of apartheid on American soil, a history of segregation enforced from individual to institutional levels, whose attempted reversal led to flight in capital and investment in increasingly Black communities. 
+	Hammer highlights that the period from the 1920’s through the 1950’s was marked by deep racial segregation in housing, wealth and opportunity, demonstrated by a 1940 Census study, where Flint was the third most segregated city in the country. African Americans through bias in lending and selling, violence from white counterparts and police harassment beyond their expected areas, were confined especially to the St John and Floral Park neighborhoods. 
+Even as the population doubled in 1947 from 1940 and tripled to 18,000 by 1955, Andrew R. Highsmith highlights in his work Demolition Means Progress: Race, Class, and the Deconstruction of the American Dream in Flint, Michigan the boundaries remained fixed with limited development inside them. 
+
+```{r}
+knitr::include_graphics("/Users/kayla/Desktop/FlintProf_Fig1.png")
+```
+
+WHITE AND CAPITAL FLIGHT 
+In the late 60’s the Open House struggle took place in Flint, with rebellions rising in the city over openly racist housing policies and systems. The fair housing ordinance, designed to open up the housing market to African Americans, was iniitially voted against by the Flint City Commission in August of 1967, pushing Floyd McCree, the city's first black mayor to threaten resignation and 4,000 Flintonians to protest for 10 days on the front steps of City Hall.
+
+Months later the ordinance was approved by the Commission in a reversal decision, but it wasn't long before the reactionaries gathered petitions to force a vote by citizens, where the legislation was passed by 43 votes of 40,000 -- .1 percent. 
+
+The city had passed monumental legislation, the first of its kind passed in the nation, and suddenly there was a nre status quo in Flint. This, in addition to the city’s demolition plan turning Floral Park into a freeway and St. Johns into an industrial park, led to a breach in the racial containment that the city had grown so accustomed to in the 1960s and 1970s, sending white families running in hordes, some even leaving before they could sell their homes. Examination of racial demographics through the decades shows this transformation in the numbers, with Black residents steadily becoming the majority as white Flintonians fled. 
+
+```{r}
+knitr::include_graphics("/Users/kayla/Desktop/FlintProf_Fig2.png")
+```
+	
+		As Flint’s Black population got progressively larger, Highsmith highlights that the county’s regional boundaries grew stronger and more exclusive. In sharp contrast to the “New Flint” Plan brought forth in 1958 with aims to  unite 26 governmental units in Genesee County to become one school district with a regional planning agency, the surrounding suburbs in the 60s and 70s ramped up their exclusionary practices. Highsmith writes,  “Following the defeat of the New Flint plan, [Flint] moved to annex suburban factories and shopping centers. In response, voters in the out-county launched several successful incorporation drives . . . The incorporation of Flint‘s inner-ring suburbs left the city landlocked, surrounded by hostile suburban governments, and far removed from the county‘s remaining industrial and commercial establishments.” Locked in and forced to deal with the city’s capital flight and racialized divestment, the city has long been in a perfect storm for crises.
+
+This white flight and its reprecussions can be seen today. The city is much blacker than Genesee county, as can be seen when mapping Black and white residents across the region. With this you also find that Flint has lower income and higher poverty rates 
+
+
+```{r}
+#create the table of variables that we'll be looking at across all tracts in Genesee 
+
+```{r}
+#load list of variables in ACS five year survey that we'll pull from 
+acs_vars_2021_5yr = listCensusMetadata(
+  name = "2021/acs/acs5",
+  type = "variables"
+)
+
+saveRDS(acs_vars_2021_5yr, "acs_vars_2021_5yr.rds")
+```
+
+```{r}
+#identify genesee and flint to put on the map 
+genesee_tracts = tracts("Michigan", "Genesee") %>%
+  mutate(GEOID = as.numeric(GEOID))
+
+genesee_vars_data = getCensus(
+  name = "acs/acs5",
+  vintage = 2021,
+  region = "tract:*",
+  regionin = "state:26+county:049",
+  vars = c("B01001_001E", "B17015_002E", "B21004_001E","B01001B_001E", "B01001A_001E", "B01001D_001E", "B01001I_001E", 
+           "C23002A_016E","C23002A_021E", "C23002A_003E", "C23002A_008E",
+           "C23002B_016E","C23002B_021E", "C23002B_003E", "C23002B_008E",
+           "C23002D_016E","C23002D_021E", "C23002D_003E", "C23002D_008E",
+           "C23002I_016E","C23002I_021E", "C23002I_003E", "C23002I_008E")) %>%
+    mutate(
+      tract = paste0(state, county, tract),
+      tract = as.numeric(tract)
+    ) %>% 
+  
+  rename("population" =  B01001_001E) %>%
+  rename("poverty" = B17015_002E) %>%
+  rename("median income" = B21004_001E) %>%
+  rename("black" = B01001B_001E) %>%
+  rename("white" = B01001A_001E) %>% 
+  rename("asian" = B01001D_001E) %>% 
+  rename("latin" = B01001I_001E) %>% 
+  rename("whiteFem" = C23002A_016E) %>%
+  #total white fem 16 to 64 years %>%
+  rename("whiteFemUnemp" = C23002A_021E) %>%
+  #total white Fem Unemployed 
+  rename("whiteMale" = C23002A_003E) %>%
+  rename("whiteMaleUnemp" = C23002A_008E) %>%
+  
+  rename("blackFem" = C23002B_016E) %>%
+  rename("blackFemUnemp" = C23002B_021E) %>%
+  rename("blackMale" = C23002B_003E) %>%
+  rename("blackMaleUnemp" = C23002B_008E) %>% 
+  
+  rename("asianFem" = C23002D_016E) %>%
+  rename("asianFemUnemp" = C23002D_021E) %>%
+  rename("asianMale" = C23002D_003E) %>%
+  rename("asianMaleUnemp" = C23002D_008E) %>% 
+  
+  rename("latinFem" = C23002I_016E) %>%
+  rename("latinFemUnemp" = C23002I_021E) %>%
+  rename("latinMale" = C23002I_003E) %>%
+  rename("latinMaleUnemp" = C23002I_008E) %>% 
+
+  
+  mutate(population = as.numeric(population))%>%
+  mutate(povertyrate = poverty/population *100) %>%
+  mutate(percentBlack = black/population *100) %>%
+  mutate(percentWhite = white/population *100) %>%
+
+  select(!c(state, county)) %>%
+  mutate(tract = as.numeric(tract))
+
+genesee_outcomes = genesee_tracts %>%
+  select(GEOID, geometry) %>%
+  left_join(genesee_vars_data, by = c("GEOID" = "tract")) %>% drop_na() 
+
+outcome_table = pivot_longer(genesee_outcomes,!c(geometry, GEOID), names_to = "variable", values_to = "numbers")
+```
+```{r}
+blk_pal = colorNumeric(
+  palette = "Blues",
+  domain = genesee_outcomes$percentBlack
+)
+
+percentBlackmap = 
+  leaflet() %>% 
+  addTiles() %>% 
+  addPolygons(
+    data = genesee_outcomes,
+    fillColor = ~blk_pal(genesee_outcomes$percentBlack),
+    color = "white",
+    opacity = 0.5,
+    fillOpacity = .6,
+    weight = 1,
+    label = ~paste0(
+      round(genesee_outcomes$percentBlack), 
+      "percent black", GEOID
+    ),
+    highlightOptions = highlightOptions(
+      weight = 2,
+      opacity = 1
+    )
+  ) %>% 
+  addLegend(
+    data = genesee_outcomes,
+    values = ~genesee_outcomes$percentBlack,
+    pal = blk_pal,
+    title = "Percent Black "
+  ) %>%
+  addPolygons(
+    data = flint,
+    fill = F,
+    weight = 2,
+    label = ~NAME
+) %>%
+  addPolygons(
+    data = genesee,
+    fill = F, 
+    weight = 3,
+    label = ~NAME)
+percentBlackmap
+```
+
+```{r}
+white_pal = colorNumeric(
+  palette = "Blues",
+  domain = genesee_outcomes$percentWhite
+)
+
+percentWhitemap = 
+  leaflet() %>% 
+  addTiles() %>% 
+  addPolygons(
+    data = genesee_outcomes,
+    fillColor = ~white_pal(genesee_outcomes$percentWhite),
+    color = "white",
+    opacity = 0.5,
+    fillOpacity = .6,
+    weight = 1,
+    label = ~paste0(
+      round(genesee_outcomes$percentWhite), 
+      "percent white", GEOID
+    ),
+    highlightOptions = highlightOptions(
+      weight = 2,
+      opacity = 1
+    )
+  ) %>% 
+  addLegend(
+    data = genesee_outcomes,
+    values = ~genesee_outcomes$percentWhite,
+    pal = white_pal,
+    title = "Percent White "
+  ) %>%
+  addPolygons(
+    data = flint,
+    fill = F,
+    weight = 2,
+    label = ~NAME
+) %>%
+  addPolygons(
+    data = genesee,
+    fill = F, 
+    weight = 3,
+    label = ~NAME)
+percentWhitemap
+
+```
+
+```{r}
+pov_pal = colorNumeric(
+  palette = "Blues",
+  domain = 
+    genesee_outcomes$povertyrate
+)
+povertymap = 
+  leaflet() %>% 
+  addTiles() %>% 
+  addPolygons(
+    data = genesee_outcomes,
+    fillColor = ~pov_pal(povertyrate),
+    color = "white",
+    opacity = 0.5,
+    fillOpacity = .6,
+    weight = 1,
+    label = ~paste0(
+      round(povertyrate), 
+      " households below the poverty line in", GEOID
+    ),
+    highlightOptions = highlightOptions(
+      weight = 2,
+      opacity = 1
+    )
+  ) %>% 
+  addLegend(
+    data = genesee_outcomes,
+    pal = pov_pal,
+    values = ~povertyrate,
+    title = "Percent of Households Below the Poverty Threshold"
+  ) %>%
+  addPolygons(
+    data = flint,
+    fill = F,
+    weight = 2,
+    label = ~NAME
+) %>%
+  addPolygons(
+    data = genesee,
+    fill = F, 
+    weight = 3,
+    label = ~NAME)
+povertymap
+```
+
+```{r}
+inc_pal = colorNumeric(
+  palette = "Blues",
+  domain = 
+    genesee_outcomes$`median income`
+)
+medianIncomemap = 
+  leaflet() %>% 
+  addTiles() %>% 
+  addPolygons(
+    data = genesee_outcomes,
+    fillColor = ~inc_pal(genesee_outcomes$`median income`),
+    color = "white",
+    opacity = 0.5,
+    fillOpacity = .6,
+    weight = 1,
+    label = ~paste0(
+      round(genesee_outcomes$`median income`), 
+      "Median Income", GEOID
+    ),
+    highlightOptions = highlightOptions(
+      weight = 2,
+      opacity = 1
+    )
+  ) %>% 
+  addLegend(
+    data = genesee_outcomes,
+    pal = inc_pal,
+    values = ~genesee_outcomes$`median income`,
+    title = "Median Income "
+  ) %>%
+  addPolygons(
+    data = flint,
+    fill = F,
+    weight = 2,
+    label = ~NAME
+) %>%
+  addPolygons(
+    data = genesee,
+    fill = F, 
+    weight = 3,
+    label = ~NAME)
+medianIncomemap
+```
+The following correlation matrix shows the correlation coefficients for the previously mapped variables. This statistic lets you know how these variables relate to each other by giving you the strength and direction of the relationship on a scale of -1 to 1. Values closer to zero show a weaker relationship, and the sign lets you know whether they move in opposite or same directions.
+```{r}
+correlate(st_drop_geometry(select(genesee_outcomes, c(population, poverty, `median income`, white, black))))
+```
+Upon analysis, one finds that race, poverty and median income are correlated in Flint with Census tracts with more Black residents being more likely to have higher poverty rates with a correlation coefficient of .58 (positive correlation and moderately strong), while ones with more white residents showing up as slighly correlated in a negative direction (-.18) or slightly less likely to have higher poverty rates. The inverse is true for income -- with whiter Census tracts being more likely to have higher median incomes (.64) while tracts with more Black residents being statistically more likely to have lower median incomes (-.49). 
+
+These statistics are paired with disparities in other areas that have intergenerational impacts on Black families in Flint. For instance, the unemployment rate for White residents is 8.6% in comparison to 17.6% for Black Flintonians. In education too, 25% of White people in the city have a Bachelor's degree in comparison to 15% for Black people. 
+
+Such disparities are cyclical and reinforcing with divestment leading to income disparities that recreate themselves across levels. An example can be found in the public school system of Flint. Highsmith highlights that the percentage of white students in Flint Public Schools dropped from 53% to 30% following the Open House struggle, experiencing “rapid transition from segregation to resegregation”. These circumstances were reinforced on an institutional level as well, especially via the Milliken v Bradley case, where in a 5-4 decision the Court of Appeals of the Sixth Circuit asserted that the interdistrict rulings to integrate schools by reaching across highly segregated regions was “wholly impermissible” and that “any particular racial balance in each school, grade or classroom” was unnecessary for desegregation. This position of inaction signaled tolerance in the face of de facto segregation, a modus operandi that was never paired with equal opporutnity nor treatment in the US, and Flint was no different.  With the rapidly shrinking school population, Flint Community Schools, who receive funding from the Department of Education based on enrollment figures, were steadily experiencing greater divestment. With enrollment continuing to decline itself ever since, a vicious cycle was created, which has undeniable impacts on the futures of these children and their families and ocmmunities consequently.
+
+
+With no sector unscathed, the city also found its housing market in a dilapidated state with the city having faced steep drops in property tax revenue and increasing vacancy rates. 
+
+```{r}
+knitr::include_graphics("/Users/kayla/Desktop/FlintProf_Fig3.png")
+```
+
+
+
+CHALLENGES AND OPPORTUNITIES FOR FRONTLINE AVENGERS 
+	Today, residents find themselves bearing the brunt of the city’s history, with nonprofit leaders on the ground working overtime to educate, protect, house and feed a people that have been snubbed, excluded and met with consistent barriers and even violent repercussions when trying to ameliorate their situations. The following data highlight the interconnected barriers that their constituents face and the importance for an equally interconnected set of responses.
+
+CHART 
+HAVE 
+Population and Demographics 
+Household finances -- median income, poverty rate
+Employment and business ownership -- labor force particip, Unemployment
+
+NEED
+Household finances -- asset/ liquid asset poverty rate, zero networth
+
+
+
+
+
+
