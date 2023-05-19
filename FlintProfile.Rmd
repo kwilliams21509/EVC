@@ -1,8 +1,6 @@
 ---
 title: "Flint Profile"
-output: html_document
-date: "2023-04-30"
-author: "Enterprising Ventures of Color" 
+author: "Enterprising Ventures of Color"
 
 ---
 ```{r include = FALSE}
@@ -21,18 +19,11 @@ library(tidycensus)
 library(flexdashboard)
 library(plotly)
 library(corrr)
+library(knitr)
+library(tinytex)
 Sys.setenv(CENSUS_KEY="9ce53b8f34d0870429639cf46ef2aae01778b004")
 ```
 
-
-While Flint was brought on the map for many by the water crisis, a Time article from 2016 highlights that the images of brown water running from taps and accounts of odors from pipes were a mere visualization of what numbers and history were already showing: both intentional and neglectful dispossession of wealth and resources for predominantly Black communities in Flint. A decreasingly white population in the city consistently warranted less investment and less care. 
-
-How has this marginzalization and divestment become apparent over time? What does it mean and look like for residents of the city today and the opportunities and challenges before them? These are explored in the following profile. 
-
-
-RISE OF VEHICLE CITY 
-Flint was founded by a fur trader named Jacob Smith as a village in 1819. After this, it became a lumbering town during the 19th century, before becoming a place for manufacturing vehicles – carriages and then automobiles - earning it the title of “Vehicle City.” 
- In 1908 General Motors was founded in the city, after which it became a “manufacturing powerhouse” for the Buick and Chevrolet divisions. By 1978, 80,000 people were working at General Motors, equal to nearly half of the city’s population at the time, a peak period for both the industry in Flint and the city itself.  
 ```{r}
 mi_cities = places("MI", cb = T, progress_bar = F)
 
@@ -59,48 +50,62 @@ leaflet() %>%
     label = ~NAME
      )
 ```
+While Flint was brought on the map for many by the water crisis, a Time article from 2016 highlights that the images of brown water running from taps and accounts of odors from pipes were a mere visualization of what numbers and history were already showing: that the city had been transformed by heavy deindustrialization, depopulation and divestment, whose most harmful impacts were too often bared by predominantly Black communities in Flint. A decreasingly white population in the city was consistently met with less investment and less care.  How has this marginalization and divestment become apparent over time? What does it mean and look like for residents of the city today and the opportunities and challenges before them? These are explored in the following profile. 
+
+
+RISE AND SHINE OF VEHICLE CITY 
+
+Flint was founded by a fur trader named Jacob Smith as a village in 1819. After this, it became a lumbering town during the 19th century, before becoming a place for manufacturing vehicles – carriages and then automobiles - earning it the title of “Vehicle City.” 
+
+In 1908 General Motors was founded in Flint, after which it became a “manufacturing powerhouse”. By 1978, 80,000 people were working at General Motors, equal to nearly half of the city’s population at the time, a peak period for both the industry in Flint and the city itself.  
+
+This growth didn’t come without tension, however, with workers unwilling to drive success without reaping basic benefits of it. As the industry accelerated, concerns grew around labor rights and conditions. From the unprecedented automotive sit-down strike in 1936, to the first union agreement with General Motors, the industry’s workers united to create a space that was both prosperous and dignified. Consequent improvements in wages and working conditions created an attractive environment to live and work, and with this came an increase in wealth that supported a strong educational system that was paired with a strong cultural environment due to the investments of auto leaders like Charles Stewart Mott and William C. Durant. From the building of Flint's Cultural Community Center, to its robust community school model that educated children but also nourished whole families, Flint at the aggregate level was thriving.
+
 ```{r}
 Year= c(1940, 1950, 1960, 1970, 1980, 1990, 2000, 2010, 2020)
 Population = c(151543,163143, 196940, 193317, 159611, 140761, 124943, 102434, 81252)
 flint_pop = as.data.frame(cbind(Year, Population))
-```
-```{r}
+
 ggplot(data = flint_pop, aes(x = Year, y = Population)) + geom_point() + geom_line(color = "blue") + theme(panel.background = element_blank()) + labs(title = "City of Flint Population 1940 - 2020")
 
 pop_table = spread(flint_pop, key = Year, value = Population)
 ```
 
-
-This growth didn’t come without tension, however, with workers unwilling to drive success without reaping basic benefits of it. As the industry accelerated, concerns grew around labor rights and conditions. From the unprecedented automotive sit-down strike in 1936, to the first union agreement with General Motors, the industry’s workers united to create a space that was both prosperous and dignified. Consequent improvements in wages and working conditions created an attractive environment in Flint to live and work, and with this came an increase in wealth that supported a strong educational system that was paired with a strong cultural environment due to the investments of auto leaders like Charles Stewart Mott and William C. Durant.  Flint at the aggregate level was thriving.
-
-
 APARTHEID IN DISAGGREGATION 
-	One would be remiss, however, to discuss this period, without a disaggregation of the data, which reveals an  exclusion of Black residents from the economic and social opportunities that came with the rise of the industry. Peter J Hammer, Professor of Law and director at Wayne State University Law School, testified in the MI Civil Right Commission hearing on the Flint water crisis. His presentation, titled “The Flint Water Crisis: History, Housing and Spatial-Structural Racism” was essentially an exploration of apartheid on American soil, a history of segregation enforced from individual to institutional levels, whose attempted reversal led to flight in capital and investment in increasingly Black communities. 
-	Hammer highlights that the period from the 1920’s through the 1950’s was marked by deep racial segregation in housing, wealth and opportunity, demonstrated by a 1940 Census study, where Flint was the third most segregated city in the country. African Americans through bias in lending and selling, violence from white counterparts and police harassment beyond their expected areas, were confined especially to the St John and Floral Park neighborhoods. 
-Even as the population doubled in 1947 from 1940 and tripled to 18,000 by 1955, Andrew R. Highsmith highlights in his work Demolition Means Progress: Race, Class, and the Deconstruction of the American Dream in Flint, Michigan the boundaries remained fixed with limited development inside them. 
+
+One would be remiss, however, to discuss this period, without a disaggregation of the data, which reveals an exclusion of Black residents from the economic and social opportunities that came with the rise of the industry. Peter J Hammer, Professor of Law and director at Wayne State University Law School, testified in the Michigan Civil Rights Commission hearing on the Flint water crisis. His presentation, titled “The Flint Water Crisis: History, Housing and Spatial-Structural Racism” was essentially an exploration of apartheid on American soil, a history of segregation enforced from individual to institutional levels, whose attempted reversal led to flight in capital and investment in increasingly Black communities. 
+
+Hammer highlights that the period from the 1920’s through the 1950’s was marked by deep racial segregation in housing, wealth and opportunity, demonstrated by a 1940 Census study, where Flint was the third most segregated city in the country. African Americans through bias in lending and selling, violence from white counterparts, and police harassment beyond their expected areas, were confined especially to the St John and Floral Park neighborhoods in Flint. Even as the Black population doubled from 1940 to 1947, and tripled to 18,000 by 1955, the boundaries remained fixed with limited development or stimulation inside them^[Andrew R. Highsmith highlights in his work Demolition Means Progress: Race, Class, and the Deconstruction of the American Dream in Flint, Michigan]. 
 
 ```{r}
 knitr::include_graphics("/Users/kayla/Desktop/FlintProf_Fig1.png")
 ```
 
-WHITE AND CAPITAL FLIGHT 
-In the late 60’s the Open House struggle took place in Flint, with rebellions rising in the city over openly racist housing policies and systems. The fair housing ordinance, designed to open up the housing market to African Americans, was iniitially voted against by the Flint City Commission in August of 1967, pushing Floyd McCree, the city's first black mayor to threaten resignation and 4,000 Flintonians to protest for 10 days on the front steps of City Hall.
+ECONOMIC EXCLUSION AND CAPITAL FLIGHT 
 
-Months later the ordinance was approved by the Commission in a reversal decision, but it wasn't long before the reactionaries gathered petitions to force a vote by citizens, where the legislation was passed by 43 votes of 40,000 -- .1 percent. 
+Between 1940 and 1960, General Motors built eight new plants outside of the city area of Flint, having begun to view suburban and rural areas as more viable investments, which, despite their hopes, marked the beginning of Flint's deindustrialization period. General Motors leaders, supported a new undertaking called the New Flint Plan, supported and driven by Charles Stewart Mott's son, Harding Mott, a prominent labor law attorney and future judge, Frank Killeen, State Attorney General, Paul Adams, and many more. This plan would unite Flint with neighboring suburbs and townships, Grand Blanc, Burton, Mt Morris and more as one tax base, one school district and one planning commission for, what they foresaw as greater and more equal opportunities.  
 
-The city had passed monumental legislation, the first of its kind passed in the nation, and suddenly there was a nre status quo in Flint. This, in addition to the city’s demolition plan turning Floral Park into a freeway and St. Johns into an industrial park, led to a breach in the racial containment that the city had grown so accustomed to in the 1960s and 1970s, sending white families running in hordes, some even leaving before they could sell their homes. Examination of racial demographics through the decades shows this transformation in the numbers, with Black residents steadily becoming the majority as white Flintonians fled. 
+Flint's suburban counterparts were firmly against the proposal, however, and in turn grew more exclusive with stronger regional boundaries, protecting their wealth and homogeneity at all costs. Voters and officials successfully barred Flint from annexing suburban factories, shopping centers and the like, making the new General Motors plants and their economic benefits largely inaccessible to Flint and its residents -- a blow for their tax base and city government. They were economically landlocked and blocked off from the economic stimulation of the larger county, placing them in a more precarious position, only snowballed by the depopulation that followed attempts at desegregation. This also had political impacts, fracturing the government in longlasting ways seen and felt today. 
 
+In the late 60’s the Open House struggle took place in Flint, with rebellions rising in the city over openly racist housing policies and systems. The fair housing ordinance, designed to open up the housing market to African Americans, was iniitially voted against by the Flint City Commission in August of 1967, pushing Floyd McCree, the city's first black mayor to threaten resignation and 4,000 Flintonians to protest for 10 days on the front steps of City Hall. Months later the ordinance was approved by the Commission, in a reversal decision, but it wasn't long before reactionaries gathered petitions to force a vote by citizens, where the legislation was passed by a slim margin of by 43 votes of 40,000 -- .1 percent. 
+
+The city had passed monumental legislation, the first of its kind passed in the nation, and suddenly there was a new status quo in Flint. This, in addition to the city’s demolition plan turning Floral Park into a freeway and St. Johns into an industrial park, where Black families were previously confined, led to a breach in the racial containment that the city had grown so accustomed to, sending white families running in hordes, some even leaving before they could sell their homes. Examination of racial demographics through the decades shows this stark transformation in the numbers, with Black residents steadily becoming the majority as white Flintonians fled. 
+
+Altogether, this period marked the onset for both deindustrialization and depopulation, whose economic impacts continue to harm Flint residents today. General Motors, who at its peak was employing 80,000 of 160,000 citizens, would soon only employ about 10,000 of them in the city; the surrounding suburbs refused to share wealth and opportunity; and white populations fueled by antiblackness and preferential housing policies were jumping ship and being welcomed with open arms to the surrounding more homogeneous suburbs. 
+
+What did this mean for the soon predominantly Black city? 
 ```{r}
 knitr::include_graphics("/Users/kayla/Desktop/FlintProf_Fig2.png")
 ```
-	
-		As Flint’s Black population got progressively larger, Highsmith highlights that the county’s regional boundaries grew stronger and more exclusive. In sharp contrast to the “New Flint” Plan brought forth in 1958 with aims to  unite 26 governmental units in Genesee County to become one school district with a regional planning agency, the surrounding suburbs in the 60s and 70s ramped up their exclusionary practices. Highsmith writes,  “Following the defeat of the New Flint plan, [Flint] moved to annex suburban factories and shopping centers. In response, voters in the out-county launched several successful incorporation drives . . . The incorporation of Flint‘s inner-ring suburbs left the city landlocked, surrounded by hostile suburban governments, and far removed from the county‘s remaining industrial and commercial establishments.” Locked in and forced to deal with the city’s capital flight and racialized divestment, the city has long been in a perfect storm for crises.
 
-This white flight and its reprecussions can be seen today. The city is much blacker than Genesee county, as can be seen when mapping Black and white residents across the region. With this you also find that Flint has lower income and higher poverty rates 
+Upon analysis, one finds that race, poverty and median income are correlated in Genesee with Census tracts with more Black residents being more likely to have higher poverty rates with a correlation coefficient of .58 (positive correlation and moderately strong), while ones with more white residents showing up as slighly correlated in a negative direction (-.18) or slightly less likely to have higher poverty rates. The inverse is true for income -- with whiter Census tracts being more likely to have higher median incomes (.64) while tracts with more Black residents being statistically more likely to have lower median incomes (-.49). 
+
+These statistics are paired with disparities in other areas that have intergenerational impacts on Black families in Flint. For instance, the unemployment rate for White residents is 8.6% in comparison to 17.6% for Black Flintonians. In education too, 25% of White people in the city have a Bachelor's degree in comparison to 15% for Black people. 
+
+Such disparities are cyclical and reinforcing, with divestment leading to income disparities that recreate themselves across levels and further divestment. An example can be found in the public school system of Flint. Highsmith highlights that the percentage of white students in Flint Public Schools dropped from 53% to 30% following the Open House struggle, experiencing “rapid transition from segregation to resegregation”. These circumstances were reinforced on an institutional level as well, especially via the Milliken v Bradley case, where in a 5-4 decision the Court of Appeals of the Sixth Circuit asserted that the interdistrict rulings to integrate schools by reaching across highly segregated regions was “wholly impermissible” and that “any particular racial balance in each school, grade or classroom” was unnecessary for desegregation. This position of inaction signaled tolerance in the face of de facto segregation, a modus operandi that was never paired with equal opporutnity nor treatment in the US, and Flint was no different.  With the rapidly shrinking school population, Flint Community Schools, who receive funding from the Department of Education based on enrollment figures, were steadily experiencing greater divestment. With enrollment continuing to decline itself ever since, a vicious cycle was created, which has undeniable impacts on the futures of these children and their families and ocmmunities consequently.
 
 
-```{r}
-#create the table of variables that we'll be looking at across all tracts in Genesee 
+With no sector unscathed, the city also found its housing market in a crumbling stat,e with the city having faced increasing vacancy rates and steep drops in property tax revenue. 
 
 ```{r}
 #load list of variables in ACS five year survey that we'll pull from 
@@ -110,9 +115,7 @@ acs_vars_2021_5yr = listCensusMetadata(
 )
 
 saveRDS(acs_vars_2021_5yr, "acs_vars_2021_5yr.rds")
-```
 
-```{r}
 #identify genesee and flint to put on the map 
 genesee_tracts = tracts("Michigan", "Genesee") %>%
   mutate(GEOID = as.numeric(GEOID))
@@ -360,35 +363,29 @@ The following correlation matrix shows the correlation coefficients for the prev
 ```{r}
 correlate(st_drop_geometry(select(genesee_outcomes, c(population, poverty, `median income`, white, black))))
 ```
-Upon analysis, one finds that race, poverty and median income are correlated in Flint with Census tracts with more Black residents being more likely to have higher poverty rates with a correlation coefficient of .58 (positive correlation and moderately strong), while ones with more white residents showing up as slighly correlated in a negative direction (-.18) or slightly less likely to have higher poverty rates. The inverse is true for income -- with whiter Census tracts being more likely to have higher median incomes (.64) while tracts with more Black residents being statistically more likely to have lower median incomes (-.49). 
-
-These statistics are paired with disparities in other areas that have intergenerational impacts on Black families in Flint. For instance, the unemployment rate for White residents is 8.6% in comparison to 17.6% for Black Flintonians. In education too, 25% of White people in the city have a Bachelor's degree in comparison to 15% for Black people. 
-
-Such disparities are cyclical and reinforcing with divestment leading to income disparities that recreate themselves across levels. An example can be found in the public school system of Flint. Highsmith highlights that the percentage of white students in Flint Public Schools dropped from 53% to 30% following the Open House struggle, experiencing “rapid transition from segregation to resegregation”. These circumstances were reinforced on an institutional level as well, especially via the Milliken v Bradley case, where in a 5-4 decision the Court of Appeals of the Sixth Circuit asserted that the interdistrict rulings to integrate schools by reaching across highly segregated regions was “wholly impermissible” and that “any particular racial balance in each school, grade or classroom” was unnecessary for desegregation. This position of inaction signaled tolerance in the face of de facto segregation, a modus operandi that was never paired with equal opporutnity nor treatment in the US, and Flint was no different.  With the rapidly shrinking school population, Flint Community Schools, who receive funding from the Department of Education based on enrollment figures, were steadily experiencing greater divestment. With enrollment continuing to decline itself ever since, a vicious cycle was created, which has undeniable impacts on the futures of these children and their families and ocmmunities consequently.
-
-
-With no sector unscathed, the city also found its housing market in a dilapidated state with the city having faced steep drops in property tax revenue and increasing vacancy rates. 
 
 ```{r}
 knitr::include_graphics("/Users/kayla/Desktop/FlintProf_Fig3.png")
 ```
 
+INEQUITY IN THE NUMBERS 
 
+By the time the city of Flint decided to switch water sources in order to reduce costs for the city, its people were already storming crises across levels, making the "how did we get here?" question one that could only be answered by exploring this history. By 2011 the city was in economic emergency, with a 25 million dollar deficit on their shoulders, a 45% poverty rate and almost one sixth of the city's homes abandoned^[https://www.nrdc.org/stories/flint-water-crisis-everything-you-need-know#summary]. Thus, the state appointed emergency manager's decision to switch from pumping water from Detroit to its own Lake Huron, came as somewhat of hail mary, with potential to save the city five million dollars over two years. It was the approach and implementation that really highlighted the lack of care for the city's residents. 
+
+For starters, the water from the Flint River, which was to serve as the temporary source as the Lake Huron pipeline was built, was highly corrosive and untreated, allowing lead and other contaminants directly into Flint homes. What was most shocking, though, was the lack of government response at city, state and federal levels. Despite residents' complaints of foul odors and tastes and sights from their tap water, officials told residents that the water was fine, showing a blatant disregard that one would struggle to imagine directed at the whiter, richer areas of Genesee County. 
+
+Thousands of children were exposed to lead contaminated water, Dr. Mona Hanna-Attisha revealed, and the city saw the third-largest Legionnaire's outbreak in US history -- a severe form of pneumonia linked to bacteria found in water. Yet, the response remained slow, insufficient and dishonest. Residents today still don't trust the water years later. 
 
 CHALLENGES AND OPPORTUNITIES FOR FRONTLINE AVENGERS 
-	Today, residents find themselves bearing the brunt of the city’s history, with nonprofit leaders on the ground working overtime to educate, protect, house and feed a people that have been snubbed, excluded and met with consistent barriers and even violent repercussions when trying to ameliorate their situations. The following data highlight the interconnected barriers that their constituents face and the importance for an equally interconnected set of responses.
-
-CHART 
-HAVE 
-Population and Demographics 
-Household finances -- median income, poverty rate
-Employment and business ownership -- labor force particip, Unemployment
-
-NEED
-Household finances -- asset/ liquid asset poverty rate, zero networth
 
 
+Residents find themselves bearing the brunt of the city’s history, with nonprofit leaders on the ground working overtime to support the  education, protection, housing and nourishment of a people that have been snubbed, excluded and met with consistent barriers and even violent repercussions when trying to ameliorate their situations.
+	
+	The following data highlight the lay of the land in Flint in comparison to the larger county, state and nation. In the disparate measures, one can also see the interconnected barriers that their constituents face and the importance for an equally interconnected set of responses.
 
-
+```{r}
+quickcensusdata = as.data.frame(read.csv("/Users/kayla/Desktop/Flint Census Data.csv"))
+quickcensusdata
+```
 
 
